@@ -1,0 +1,38 @@
+# !pip install "numpy<2"
+# !pip install imbalanced-learn
+
+# Imports
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from sklearn.metrics import classification_report
+from imblearn.combine import SMOTETomek
+import warnings
+warnings.filterwarnings('ignore')
+
+# 1. Dataset
+X, y = make_classification(n_samples=1000, n_features=10, n_informative=2,
+                           n_redundant=8, weights=[0.9,0.1], random_state=42)
+
+# 2. Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=42)
+
+# 3. Handle imbalance
+X_train_res, y_train_res = SMOTETomek(random_state=42).fit_resample(X_train, y_train)
+
+# 4. Models & experiments
+models = [
+    ("LR", {"C":1}, LogisticRegression(), (X_train, y_train)),
+    ("RF", {"n_estimators":30}, RandomForestClassifier(), (X_train, y_train)),
+    ("XGB", {"use_label_encoder":False,"eval_metric":"logloss"}, XGBClassifier(), (X_train, y_train)),
+    ("XGB+SMOTE", {"use_label_encoder":False,"eval_metric":"logloss"}, XGBClassifier(), (X_train_res, y_train_res))
+]
+
+# 5. Train & evaluate
+for name, params, model, train_set in models:
+    model.set_params(**params)
+    model.fit(*train_set)
+    print(name)
+    print(classification_report(y_test, model.predict(X_test)))
