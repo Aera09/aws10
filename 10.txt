@@ -1,38 +1,61 @@
-# !pip install "numpy<2"
-# !pip install imbalanced-learn
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Imports
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
-from sklearn.metrics import classification_report
-from imblearn.combine import SMOTETomek
-import warnings
-warnings.filterwarnings('ignore')
+# Load CSV file
+df = pd.read_csv("data.csv")
 
-# 1. Dataset
-X, y = make_classification(n_samples=1000, n_features=10, n_informative=2,
-                           n_redundant=8, weights=[0.9,0.1], random_state=42)
+years = df["Year"]
+sales = df["Sales"]
 
-# 2. Split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=42)
+# -------------------------------
+# a) Line Plot
+# -------------------------------
+plt.figure(figsize=(6,4))
+plt.plot(years, sales, marker='o', label="Sales Trend")
+plt.title("Year vs Sales (Line Plot)")
+plt.xlabel("Year")
+plt.ylabel("Sales")
+plt.legend()
+plt.grid(True)
+plt.show()
 
-# 3. Handle imbalance
-X_train_res, y_train_res = SMOTETomek(random_state=42).fit_resample(X_train, y_train)
+# -------------------------------
+# b) Scatter Plot
+# -------------------------------
+plt.figure(figsize=(6,4))
+plt.scatter(years, sales, label="Sales Points")
+plt.title("Year vs Sales (Scatter Plot)")
+plt.xlabel("Year")
+plt.ylabel("Sales")
+plt.legend()
+plt.grid(True)
+plt.show()
 
-# 4. Models & experiments
-models = [
-    ("LR", {"C":1}, LogisticRegression(), (X_train, y_train)),
-    ("RF", {"n_estimators":30}, RandomForestClassifier(), (X_train, y_train)),
-    ("XGB", {"use_label_encoder":False,"eval_metric":"logloss"}, XGBClassifier(), (X_train, y_train)),
-    ("XGB+SMOTE", {"use_label_encoder":False,"eval_metric":"logloss"}, XGBClassifier(), (X_train_res, y_train_res))
-]
+# -------------------------------
+# c) Bar Graph
+# -------------------------------
+plt.figure(figsize=(6,4))
+plt.bar(years, sales, label="Sales", width=0.5)
+plt.title("Sales by Year (Bar Graph)")
+plt.xlabel("Year")
+plt.ylabel("Sales")
+plt.legend()
+plt.show()
 
-# 5. Train & evaluate
-for name, params, model, train_set in models:
-    model.set_params(**params)
-    model.fit(*train_set)
-    print(name)
-    print(classification_report(y_test, model.predict(X_test)))
+# -------------------------------
+# d) Histogram of Sales
+# -------------------------------
+plt.figure(figsize=(6,4))
+plt.hist(sales, bins=5, edgecolor="black")
+plt.title("Sales Distribution (Histogram)")
+plt.xlabel("Sales")
+plt.ylabel("Frequency")
+plt.show()
+
+# -------------------------------
+# e) Pie Chart
+# -------------------------------
+plt.figure(figsize=(6,6))
+plt.pie(sales, labels=years, autopct="%1.1f%%")
+plt.title("Percentage Share of Sales by Year")
+plt.show()
