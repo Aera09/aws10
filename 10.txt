@@ -59,3 +59,102 @@ plt.figure(figsize=(6,6))
 plt.pie(sales, labels=years, autopct="%1.1f%%")
 plt.title("Percentage Share of Sales by Year")
 plt.show()
+
+# ANOTHER CODE FOR MATPLOTLIB
+------------------------------------------------------------------------------------
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# -----------------------------
+# 1. Line Plot
+# -----------------------------
+x = [1, 2, 3, 4, 5]
+y = [10, 20, 30, 25, 15]
+
+plt.figure(figsize=(10, 6))
+plt.plot(x, y, marker='o', color='blue', label="Line Trend")
+plt.title("Line Plot Example")
+plt.xlabel("X Values")
+plt.ylabel("Y Values")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# -----------------------------
+# 2. Plotting from CSV / TSV
+# -----------------------------
+# For CSV file → data.csv
+#   Year,Sales
+#   2020,50
+#   2021,70
+#   2022,65
+
+try:
+    df_csv = pd.read_csv("data.csv")
+    plt.plot(df_csv['Year'], df_csv['Sales'], marker='s', color='green', label="CSV Data")
+    plt.title("Plot from CSV File")
+    plt.xlabel("Year")
+    plt.ylabel("Sales")
+    plt.legend()
+    plt.show()
+except:
+    print("CSV file not found (Skip this section in output).")
+
+# For TSV file → data.tsv
+try:
+    df_tsv = pd.read_csv("data.tsv", sep="\t")
+    plt.plot(df_tsv['Year'], df_tsv['Sales'], marker='^', color='purple', label="TSV Data")
+    plt.title("Plot from TSV File")
+    plt.xlabel("Year")
+    plt.ylabel("Sales")
+    plt.legend()
+    plt.show()
+except:
+    print("TSV file not found (Skip this section in output).")
+
+# -----------------------------
+# 3. Scatter Plot
+# -----------------------------
+x_scatter = [5, 10, 15, 20, 25]
+y_scatter = [3, 6, 8, 12, 15]
+
+plt.scatter(x_scatter, y_scatter, color='red')
+plt.title("Scatter Plot Example")
+plt.xlabel("X Scatter")
+plt.ylabel("Y Scatter")
+plt.show()
+
+# -----------------------------
+# 4. Bar Plot
+# -----------------------------
+names = ["A", "B", "C", "D"]
+marks = [85, 90, 75, 60]
+
+plt.bar(names, marks, color='orange')
+plt.title("Student Marks - Bar Plot")
+plt.xlabel("Students")
+plt.ylabel("Marks")
+plt.show()
+
+# -----------------------------
+# 5. Histogram
+# -----------------------------
+values = [10, 20, 20, 30, 30, 40, 40, 40, 50, 60, 70]
+
+plt.hist(values, bins=5, color='skyblue', edgecolor='black')
+plt.title("Histogram Example")
+plt.xlabel("Value Range")
+plt.ylabel("Frequency")
+plt.show()
+
+# -----------------------------
+# 6. Pie Chart
+# -----------------------------
+sizes = [40, 30, 20, 10]
+labels = ["Section A", "Section B", "Section C", "Section D"]
+
+plt.pie(sizes, labels=labels, autopct="%1.1f%%",
+        startangle=90, explode=[0.05, 0, 0, 0])
+plt.title("Pie Chart Example")
+plt.show()
+
